@@ -33,6 +33,13 @@ func TestBitmap_Len(t *testing.T) {
 	}
 }
 
+func TestBitmap_WrongLen(t *testing.T) {
+	bm := NewBitmap(math.MaxUint32)
+	if bm != nil {
+		t.Error("NewBitmap out of length but did not return a nil")
+	}
+}
+
 func TestBitmap_SetOne(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		bm, pos := genBitmapPos()
