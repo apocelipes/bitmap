@@ -13,7 +13,7 @@ func genRandPos(size uint32) uint32 {
 }
 
 func genBitmap() (*Bitmap, uint32) {
-	length := rand.Uint32() % uint32(math.MaxInt32)
+	length := rand.Uint32() % maxLength
 	bm := NewBitmap(length)
 	return bm, length
 }

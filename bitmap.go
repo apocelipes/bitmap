@@ -2,7 +2,6 @@ package bitmap
 
 import (
 	"errors"
-	"math"
 	"strconv"
 	"strings"
 )
@@ -18,11 +17,15 @@ const (
 	fullMask  uint64 = (1 << bitLength) - 1 // 覆盖bucket所有位的掩码
 )
 
+var (
+	maxLength = MaxUint64SliceCap() // 平台对应的[]uint64最大长度
+)
+
 // NewBitmap 创建有length个位的bitmap
 // length不能超过math.MaxInt32，因为slice的长度不能超过MaxInt，
 // 所以我们选取32位int的最大值以便同时兼容32位和64位系统
 func NewBitmap(length uint32) *Bitmap {
-	if length > uint32(math.MaxInt32) {
+	if length > maxLength {
 		return nil
 	}
 
@@ -46,7 +49,7 @@ func (b *Bitmap) Len() uint32 {
 // 例如对于长度为bitLength的bitmap，buckets[0]的最右边一位代表了bitmap的索引0表示的位
 // buckets[0]最左边一位代表了bitmap的索引bitLength-1所表示的位
 func (b *Bitmap) getPos(pos uint32) (uint32, uint32, error) {
-	if pos >= b.Len() || pos > uint32(math.MaxInt32) {
+	if pos >= b.Len() || pos > maxLength {
 		return 0, 0, errors.New("out of Bitmap length")
 	}
 
