@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+// Bitmap 每个Bitmap包含了数个容纳uint64类型对应bit数的空间
+// 这些空间的索引从0开始
 type Bitmap struct {
 	buckets []uint64
 	// map中包含的位的总数
@@ -40,6 +42,7 @@ func NewBitmap(length uint32) *Bitmap {
 	}
 }
 
+// Len 返回Bitmap当前含有buckets的数量
 func (b *Bitmap) Len() uint32 {
 	return b.length
 }
