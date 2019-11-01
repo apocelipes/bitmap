@@ -14,15 +14,6 @@ type Bitmap struct {
 	length uint32
 }
 
-const (
-	bitLength uint32 = 64                   // 一个bucket的长度
-	fullMask  uint64 = (1 << bitLength) - 1 // 覆盖bucket所有位的掩码
-)
-
-var (
-	maxLength = MaxUint64SliceCap() // 平台对应的[]uint64最大长度
-)
-
 // NewBitmap 创建有length个位的bitmap
 // length不能超过math.MaxInt32，因为slice的长度不能超过MaxInt，
 // 所以我们选取32位int的最大值以便同时兼容32位和64位系统
