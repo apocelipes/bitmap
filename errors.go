@@ -1,5 +1,9 @@
 package bitmap
 
+import (
+	"errors"
+)
+
 var (
-	maxLength = MaxUint64SliceCap() // 平台对应的[]uint64最大长度
+	errOutOfLength = errors.New("out of Bitmap length")
 )

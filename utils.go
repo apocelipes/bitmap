@@ -4,6 +4,7 @@ import (
 	"math"
 	"reflect"
 	"runtime"
+	"strings"
 )
 
 // maxSliceCap 计算元素类型和i相同的slice最大可以容纳多少元素。
@@ -50,4 +51,40 @@ func MaxUint64SliceCap() uint32 {
 	}
 
 	return uint32(max)
+}
+
+// 向数字字符串的左侧填充0，使字符串的长度达到fullSize
+func paddingLeftZero(data string, fullSize int) string {
+	if len(data) >= fullSize {
+		return data
+	}
+
+	zeros := fullSize - len(data)
+	return strings.Repeat("0", zeros) + data
+}
+
+// 返回指定索引对应的bucket的index，以及索引在该bucket中的位置
+// bucket中位的排列采用大端序，最右边的一位代表bitmap的索引在该bucket中最小。
+// 例如对于长度为bitLength的bitmap，buckets[0]的最右边一位代表了bitmap的索引0表示的位
+// buckets[0]最左边一位代表了bitmap的索引bitLength-1所表示的位
+func getPos(mapLength, pos uint32) (uint32, uint32, error) {
+	if pos >= mapLength || pos > maxLength {
+		return 0, 0, errOutOfLength
+	}
+
+	bucketIndex := pos / bitLength // 确定bucket的索引
+	bitIndex := pos % bitLength    // 确定在bucket中的位置
+
+	return bucketIndex, bitIndex, nil
+}
+
+// calcBlocks 根据需要的位数计算bitmap中包含的bucket的个数
+func calcBlocks(length uint32) uint32 {
+	blocks := length / bitLength
+	remainder := length % bitLength
+	if remainder != 0 {
+		blocks++
+	}
+
+	return blocks
 }
